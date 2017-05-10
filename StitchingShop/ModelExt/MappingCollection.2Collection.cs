@@ -9,6 +9,18 @@ using System.Runtime;
 [DebuggerDisplay("Count = {Count}")]
 public partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
 {
+    static readonly T[] _emptyArray = new T[0];
+    private const int _defaultCapacity = 4;
+
+    protected bool isReadOnly = false;
+    protected bool isFixedSize = false;
+
+    private T[] _items;
+    [ContractPublicPropertyName("Count")]
+    private int _size;
+    private int _version;
+    [NonSerialized]
+    private Object _syncRoot;
     public T this[int index]
     {
         get
@@ -23,15 +35,10 @@ public partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
             SetItem(index, value);
         }
     }
-
     public void Add(T item)
     {
         InsertItem(_size, item);
     }
-
-#if !FEATURE_CORECLR
-    [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
     public void Clear()
     {
         ClearItems();
@@ -40,7 +47,6 @@ public partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
     {
         RemoveItem(index);
     }
-
     void ICollection.CopyTo(Array array, int index)
     {
         if (array == null)
@@ -98,7 +104,6 @@ public partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
             }
         }
     }
-
     object IList.this[int index]
     {
         get { return _items[index]; }
@@ -109,7 +114,6 @@ public partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
             this[index] = (T)value;
         }
     }
-
     int IList.Add(object value)
     {
         if (!IsCompatibleObject(value))
@@ -117,7 +121,6 @@ public partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         InsertItem(_size,(T)value);
         return _size - 1;
     }
-
     bool IList.Contains(object value)
     {
         if (IsCompatibleObject(value))
@@ -126,36 +129,11 @@ public partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         }
         return false;
     }
-
     void IList.Insert(int index, object value)
     {
         if (IsCompatibleObject(value))
             Insert(index, (T)value);
     }
-}
-[DebuggerDisplay("Count = {Count}")]
-partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
-{
-    private const int _defaultCapacity = 4;
-    protected bool isReadOnly = false;
-    protected bool isFixedSize = false;
-
-    private T[] _items;
-    [ContractPublicPropertyName("Count")]
-    private int _size;
-    private int _version;
-    [NonSerialized]
-    private Object _syncRoot;
-
-    static readonly T[] _emptyArray = new T[0];
-
-    // Constructs a List with a given initial capacity. The list is
-    // initially empty, but will have room for the given number of elements
-    // before any reallocations are required.
-    // 
-#if !FEATURE_CORECLR
-    [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
     public MappingCollection(int capacity)
     {
         if (capacity < 0) ThrowHelper.ThrowArgumentOutOfRangeException(
@@ -216,9 +194,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
     // 
     public int Capacity
     {
-#if !FEATURE_CORECLR
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
         get
         {
             Contract.Ensures(Contract.Result<int>() >= 0);
@@ -402,13 +377,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         output._size = _size;
         return output;
     }
-
-    // Copies this List into array, which must be of a 
-    // compatible array type.  
-    //
-#if !FEATURE_CORECLR
-    [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
     public void CopyTo(T[] array)
     {
         CopyTo(array, 0);
@@ -603,37 +571,18 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         if (version != _version)
             ThrowHelper.ThrowInvalidOperationException(ExceptionResource.InvalidOperation_EnumFailedVersion);
     }
-
-    // Returns an enumerator for this list with the given
-    // permission for removal of elements. If modifications made to the list 
-    // while an enumeration is in progress, the MoveNext and 
-    // GetObject methods of the enumerator will throw an exception.
-    //
-#if !FEATURE_CORECLR
-    [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
     public Enumerator GetEnumerator()
     {
         return new Enumerator(this);
     }
-
-    /// <internalonly/>
-#if !FEATURE_CORECLR
-    [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
         return new Enumerator(this);
     }
-
-#if !FEATURE_CORECLR
-    [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
     IEnumerator IEnumerable.GetEnumerator()
     {
         return new Enumerator(this);
     }
-
     public MappingCollection<T> GetRange(int index, int count)
     {
         if (index < 0)
@@ -658,29 +607,12 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         list._size = count;
         return list;
     }
-
-
-    // Returns the index of the first occurrence of a given value in a range of
-    // this list. The list is searched forwards from beginning to end.
-    // The elements of the list are compared to the given value using the
-    // Object.Equals method.
-    // 
-    // This method uses the Array.IndexOf method to perform the
-    // search.
-    // 
-#if !FEATURE_CORECLR
-    [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
     public int IndexOf(T item)
     {
         Contract.Ensures(Contract.Result<int>() >= -1);
         Contract.Ensures(Contract.Result<int>() < Count);
         return Array.IndexOf(_items, item, 0, _size);
     }
-
-#if !FEATURE_CORECLR
-    [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
     int IList.IndexOf(Object item)
     {
         if (IsCompatibleObject(item))
@@ -689,16 +621,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         }
         return -1;
     }
-
-    // Returns the index of the first occurrence of a given value in a range of
-    // this list. The list is searched forwards, starting at index
-    // index and ending at count number of elements. The
-    // elements of the list are compared to the given value using the
-    // Object.Equals method.
-    // 
-    // This method uses the Array.IndexOf method to perform the
-    // search.
-    // 
     public int IndexOf(T item, int index)
     {
         if (index > _size)
@@ -708,16 +630,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         Contract.EndContractBlock();
         return Array.IndexOf(_items, item, index, _size - index);
     }
-
-    // Returns the index of the first occurrence of a given value in a range of
-    // this list. The list is searched forwards, starting at index
-    // index and upto count number of elements. The
-    // elements of the list are compared to the given value using the
-    // Object.Equals method.
-    // 
-    // This method uses the Array.IndexOf method to perform the
-    // search.
-    // 
     public int IndexOf(T item, int index, int count)
     {
         if (index > _size)
@@ -730,21 +642,10 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
 
         return Array.IndexOf(_items, item, index, count);
     }
-
-    // Inserts an element into this list at a given index. The size of the list
-    // is increased by one. If required, the capacity of the list is doubled
-    // before inserting the new element.
-    // 
     public void Insert(int index, T item)
     {
         InsertItem(index, item);
     }
-
-    // Inserts the elements of the given collection at a given index. If
-    // required, the capacity of the list is increased to twice the previous
-    // capacity or the new size, whichever is larger.  Ranges may be added
-    // to the end of the list by setting index to the List's size.
-    //
     public void InsertRange(int index, IEnumerable<T> collection)
     {
         if (collection == null)
@@ -799,15 +700,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         }
         _version++;
     }
-
-    // Returns the index of the last occurrence of a given value in a range of
-    // this list. The list is searched backwards, starting at the end 
-    // and ending at the first element in the list. The elements of the list 
-    // are compared to the given value using the Object.Equals method.
-    // 
-    // This method uses the Array.LastIndexOf method to perform the
-    // search.
-    // 
     public int LastIndexOf(T item)
     {
         Contract.Ensures(Contract.Result<int>() >= -1);
@@ -821,16 +713,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
             return LastIndexOf(item, _size - 1, _size);
         }
     }
-
-    // Returns the index of the last occurrence of a given value in a range of
-    // this list. The list is searched backwards, starting at index
-    // index and ending at the first element in the list. The 
-    // elements of the list are compared to the given value using the 
-    // Object.Equals method.
-    // 
-    // This method uses the Array.LastIndexOf method to perform the
-    // search.
-    // 
     public int LastIndexOf(T item, int index)
     {
         if (index >= _size)
@@ -840,16 +722,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         Contract.EndContractBlock();
         return LastIndexOf(item, index, index + 1);
     }
-
-    // Returns the index of the last occurrence of a given value in a range of
-    // this list. The list is searched backwards, starting at index
-    // index and upto count elements. The elements of
-    // the list are compared to the given value using the Object.Equals
-    // method.
-    // 
-    // This method uses the Array.LastIndexOf method to perform the
-    // search.
-    // 
     public int LastIndexOf(T item, int index, int count)
     {
         if ((Count != 0) && (index < 0))
@@ -892,7 +764,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         RemoveItem(index);
         return true;
     }
-
     void IList.Remove(Object item)
     {
         if (IsCompatibleObject(item))
@@ -900,9 +771,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
             Remove((T)item);
         }
     }
-
-    // This method removes all items which matches the predicate.
-    // The complexity is O(n).   
     public int RemoveAll(Predicate<T> match)
     {
         if (match == null)
@@ -938,9 +806,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         _version++;
         return result;
     }
-
-    // Removes a range of elements from this list.
-    // 
     public void RemoveRange(int index, int count)
     {
         if (index < 0)
@@ -969,21 +834,10 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
             _version++;
         }
     }
-
-    // Reverses the elements in this list.
     public void Reverse()
     {
         Reverse(0, Count);
     }
-
-    // Reverses the elements in a range of this list. Following a call to this
-    // method, an element in the range given by index and count
-    // which was previously located at index i will now be located at
-    // index index + (index + count - i - 1).
-    // 
-    // This method uses the Array.Reverse method to reverse the
-    // elements.
-    // 
     public void Reverse(int index, int count)
     {
         if (index < 0)
@@ -1002,29 +856,14 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         Array.Reverse(_items, index, count);
         _version++;
     }
-
-    // Sorts the elements in this list.  Uses the default comparer and 
-    // Array.Sort.
     public void Sort()
     {
         Sort(0, Count, null);
     }
-
-    // Sorts the elements in this list.  Uses Array.Sort with the
-    // provided comparer.
     public void Sort(IComparer<T> comparer)
     {
         Sort(0, Count, comparer);
     }
-
-    // Sorts the elements in a section of this list. The sort compares the
-    // elements to each other using the given IComparer interface. If
-    // comparer is null, the elements are compared to each other using
-    // the IComparable interface, which in that case must be implemented by all
-    // elements of the list.
-    // 
-    // This method uses the Array.Sort method to sort the elements.
-    // 
     public void Sort(int index, int count, IComparer<T> comparer)
     {
         if (index < 0)
@@ -1044,7 +883,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         Array.Sort<T>(_items, index, count, comparer);
         _version++;
     }
-
     public void Sort(Comparison<T> comparison)
     {
         if (comparison == null)
@@ -1059,9 +897,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
             Array.Sort(_items, 0, _size, comparer);
         }
     }
-
-    // ToArray returns a new Object array containing the contents of the List.
-    // This requires copying the List, which is an O(n) operation.
     public T[] ToArray()
     {
         Contract.Ensures(Contract.Result<T[]>() != null);
@@ -1071,16 +906,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         Array.Copy(_items, 0, array, 0, _size);
         return array;
     }
-
-    // Sets the capacity of this list to the size of the list. This method can
-    // be used to minimize a list's memory overhead once it is known that no
-    // new elements will be added to the list. To completely clear a list and
-    // release all memory referenced by the list, execute the following
-    // statements:
-    // 
-    // list.Clear();
-    // list.TrimExcess();
-    // 
     public void TrimExcess()
     {
         int threshold = (int)(((double)_items.Length) * 0.9);
@@ -1089,28 +914,10 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
             Capacity = _size;
         }
     }
-
-#if FEATURE_LIST_PREDICATES || FEATURE_NETCORE
-        public bool TrueForAll(Predicate<T> match) {
-            if( match == null) {
-                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.match);
-            }
-            Contract.EndContractBlock();
-
-            for(int i = 0 ; i < _size; i++) {
-                if( !match(_items[i])) {
-                    return false;
-                }
-            }
-            return true;
-        } 
-#endif // FEATURE_LIST_PREDICATES || FEATURE_NETCORE
-
     internal static IList<T> Synchronized(List<T> list)
     {
         return new SynchronizedList(list);
     }
-
     [Serializable()]
     internal class SynchronizedList : IList<T>
     {
@@ -1240,7 +1047,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
             }
         }
     }
-
     [Serializable]
     public struct Enumerator : IEnumerator<T>, IEnumerator
     {
@@ -1256,10 +1062,6 @@ partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
             version = list._version;
             current = default(T);
         }
-
-#if !FEATURE_CORECLR
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
         public void Dispose()
         {
         }
