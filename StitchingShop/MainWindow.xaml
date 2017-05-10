@@ -1,0 +1,55 @@
+﻿<Window x:Class="StitchingShop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StitchingShop"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="417.105" Width="601.316" Loaded="Window_Loaded">
+    <Window.Resources>
+        <local:Customer x:Key="MyCustomer" CustomerName="Amna" Address="DMR BWP" CNIC="12345-1234567-1"/>
+        <CollectionViewSource x:Key="tailorShopEntitiesCustomersPhoneNumbersViewSource" Source="{Binding PhoneNumbers, Source={StaticResource MyCustomer}}"/>
+    </Window.Resources>
+    <Grid x:Name="grid1" DataContext="{StaticResource MyCustomer}" Margin="3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Content="Address:" Grid.Column="0" HorizontalAlignment="Left" Margin="3,3,0,3" Grid.Row="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="addressTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="3" Grid.Row="0" Text="{Binding Address, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+        <Label Content="CNIC:" Grid.Column="0" HorizontalAlignment="Left" Margin="3,3,0,3" Grid.Row="1" VerticalAlignment="Center"/>
+        <TextBox x:Name="cNICTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="3" Grid.Row="1" Text="{Binding CNIC, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+        <Label Content="Customer ID:" Grid.Column="0" HorizontalAlignment="Left" Margin="3,3,0,3" Grid.Row="2" VerticalAlignment="Center"/>
+        <TextBox x:Name="customerIDTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="3" Grid.Row="2" Text="{Binding CustomerID, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+        <Label Content="Customer Name:" Grid.Column="0" HorizontalAlignment="Left" Margin="3,3,0,3" Grid.Row="3" VerticalAlignment="Center"/>
+        <TextBox x:Name="customerNameTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="3" Grid.Row="3" Text="{Binding CustomerName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+        <TextBox x:Name="customerContactNumbersTextBox" Grid.Column="2" Margin="3" Text="{Binding ContactNumbers, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" Grid.RowSpan="4" ScrollViewer.CanContentScroll="True" AcceptsReturn="True"/>
+        <DataGrid x:Name="phoneNumbersDataGrid" Grid.ColumnSpan="3"
+                  AutoGenerateColumns="False" EnableRowVirtualization="True" Margin="3" Grid.Row="4" 
+                  ItemsSource="{Binding Source={StaticResource tailorShopEntitiesCustomersPhoneNumbersViewSource}}" 
+                  RowDetailsVisibilityMode="VisibleWhenSelected">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="customerIDColumn" Binding="{Binding CustomerID}" Header="Customer ID" Width="SizeToHeader"/>
+                <DataGridTextColumn x:Name="numberColumn" Binding="{Binding Number}" Header="Number" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="5" Grid.ColumnSpan="3" Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="btnResetPhoneBook" Content="_Reset Phone Book" Grid.Column="1" HorizontalAlignment="Left" Margin="3" VerticalAlignment="Top" Width="175" Click="btnResetPhoneBook_Click"/>
+            <Button x:Name="btnClose" Content="_Close" Grid.Column="2" HorizontalAlignment="Left" Margin="3" VerticalAlignment="Top" Width="75"/>
+        </Grid>
+    </Grid>
+</Window>

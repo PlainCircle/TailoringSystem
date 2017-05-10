@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="80e9be7a50704c10ae83d162b77fbd09" Name="Diagram1">
+        <EntityTypeShape EntityType="TailorShopModel.Customer" Width="1.75" PointX="5.125" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TailorShopModel.Design" Width="1.5" PointX="2.75" PointY="1.25" IsExpanded="false" />
+        <EntityTypeShape EntityType="TailorShopModel.DesignType" Width="1.5" PointX="0.625" PointY="1" />
+        <EntityTypeShape EntityType="TailorShopModel.PhoneNumber" Width="1.75" PointX="7.5" PointY="4.375" IsExpanded="false" />
+        <EntityTypeShape EntityType="TailorShopModel.SizeField" Width="1.75" PointX="5.125" PointY="0.875" />
+        <EntityTypeShape EntityType="TailorShopModel.SizeFieldValue" Width="1.5" PointX="2.75" PointY="2.375" />
+        <AssociationConnector Association="TailorShopModel.FK_PhoneNumbers_Customer" />
+        <AssociationConnector Association="TailorShopModel.FK_SizeFieldValue_Customer" />
+        <AssociationConnector Association="TailorShopModel.FK_Design_DesignType" />
+        <AssociationConnector Association="TailorShopModel.FK_SizeFieldValue_SizeField" />
+        <AssociationConnector Association="TailorShopModel.DesignSizeField" />
+        <AssociationConnector Association="TailorShopModel.DesignTypeSizeField" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

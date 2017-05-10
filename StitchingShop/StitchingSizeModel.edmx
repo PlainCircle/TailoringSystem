@@ -1,0 +1,468 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TailorShopModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="CustomerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerName" Type="nchar" MaxLength="255" Nullable="false" />
+          <Property Name="CustomerImage" Type="varbinary(max)" Nullable="false" />
+          <Property Name="CNIC" Type="nchar" MaxLength="15" />
+          <Property Name="Address" Type="nchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Design">
+          <Key>
+            <PropertyRef Name="DesignID" />
+          </Key>
+          <Property Name="DesignID" Type="int" Nullable="false" />
+          <Property Name="DesignName" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="DesignTypeID" Type="int" Nullable="false" />
+          <Property Name="DesignImage" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="DesignSizeField">
+          <Key>
+            <PropertyRef Name="DesignID" />
+            <PropertyRef Name="SizeFieldID" />
+          </Key>
+          <Property Name="DesignID" Type="int" Nullable="false" />
+          <Property Name="SizeFieldID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DesignType">
+          <Key>
+            <PropertyRef Name="DesignTypeID" />
+          </Key>
+          <Property Name="DesignTypeID" Type="int" Nullable="false" />
+          <Property Name="DesignTypeName" Type="nchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DesignTypeSizeField">
+          <Key>
+            <PropertyRef Name="DesignTypeID" />
+            <PropertyRef Name="SizeFieldID" />
+          </Key>
+          <Property Name="DesignTypeID" Type="int" Nullable="false" />
+          <Property Name="SizeFieldID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PhoneNumbers">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+            <PropertyRef Name="PhoneNumber" />
+          </Key>
+          <Property Name="CustomerID" Type="int" Nullable="false" />
+          <Property Name="PhoneNumber" Type="nchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SizeField">
+          <Key>
+            <PropertyRef Name="SizeFieldID" />
+          </Key>
+          <Property Name="SizeFieldID" Type="int" Nullable="false" />
+          <Property Name="SizeFieldNameEnglish" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="SizeFieldNameUrdu" Type="nchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SizeFieldValue">
+          <Key>
+            <PropertyRef Name="SizeFieldID" />
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="SizeFieldID" Type="int" Nullable="false" />
+          <Property Name="CustomerID" Type="int" Nullable="false" />
+          <Property Name="Value" Type="float" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Design_DesignType">
+          <End Role="DesignType" Type="Self.DesignType" Multiplicity="1" />
+          <End Role="Design" Type="Self.Design" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DesignType">
+              <PropertyRef Name="DesignTypeID" />
+            </Principal>
+            <Dependent Role="Design">
+              <PropertyRef Name="DesignTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DesignSizeField_Design">
+          <End Role="Design" Type="Self.Design" Multiplicity="1" />
+          <End Role="DesignSizeField" Type="Self.DesignSizeField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Design">
+              <PropertyRef Name="DesignID" />
+            </Principal>
+            <Dependent Role="DesignSizeField">
+              <PropertyRef Name="DesignID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DesignSizeField_SizeField">
+          <End Role="SizeField" Type="Self.SizeField" Multiplicity="1" />
+          <End Role="DesignSizeField" Type="Self.DesignSizeField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SizeField">
+              <PropertyRef Name="SizeFieldID" />
+            </Principal>
+            <Dependent Role="DesignSizeField">
+              <PropertyRef Name="SizeFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DesignTypeSizeField_DesignType">
+          <End Role="DesignType" Type="Self.DesignType" Multiplicity="1" />
+          <End Role="DesignTypeSizeField" Type="Self.DesignTypeSizeField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DesignType">
+              <PropertyRef Name="DesignTypeID" />
+            </Principal>
+            <Dependent Role="DesignTypeSizeField">
+              <PropertyRef Name="DesignTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DesignTypeSizeField_SizeField">
+          <End Role="SizeField" Type="Self.SizeField" Multiplicity="1" />
+          <End Role="DesignTypeSizeField" Type="Self.DesignTypeSizeField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SizeField">
+              <PropertyRef Name="SizeFieldID" />
+            </Principal>
+            <Dependent Role="DesignTypeSizeField">
+              <PropertyRef Name="SizeFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PhoneNumbers_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="PhoneNumbers" Type="Self.PhoneNumbers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="PhoneNumbers">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SizeFieldValue_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="SizeFieldValue" Type="Self.SizeFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="SizeFieldValue">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SizeFieldValue_SizeField">
+          <End Role="SizeField" Type="Self.SizeField" Multiplicity="1" />
+          <End Role="SizeFieldValue" Type="Self.SizeFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SizeField">
+              <PropertyRef Name="SizeFieldID" />
+            </Principal>
+            <Dependent Role="SizeFieldValue">
+              <PropertyRef Name="SizeFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TailorShopModelStoreContainer">
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Design" EntityType="Self.Design" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DesignSizeField" EntityType="Self.DesignSizeField" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DesignType" EntityType="Self.DesignType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DesignTypeSizeField" EntityType="Self.DesignTypeSizeField" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PhoneNumbers" EntityType="Self.PhoneNumbers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SizeField" EntityType="Self.SizeField" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SizeFieldValue" EntityType="Self.SizeFieldValue" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Design_DesignType" Association="Self.FK_Design_DesignType">
+            <End Role="DesignType" EntitySet="DesignType" />
+            <End Role="Design" EntitySet="Design" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DesignSizeField_Design" Association="Self.FK_DesignSizeField_Design">
+            <End Role="Design" EntitySet="Design" />
+            <End Role="DesignSizeField" EntitySet="DesignSizeField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DesignSizeField_SizeField" Association="Self.FK_DesignSizeField_SizeField">
+            <End Role="SizeField" EntitySet="SizeField" />
+            <End Role="DesignSizeField" EntitySet="DesignSizeField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DesignTypeSizeField_DesignType" Association="Self.FK_DesignTypeSizeField_DesignType">
+            <End Role="DesignType" EntitySet="DesignType" />
+            <End Role="DesignTypeSizeField" EntitySet="DesignTypeSizeField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DesignTypeSizeField_SizeField" Association="Self.FK_DesignTypeSizeField_SizeField">
+            <End Role="SizeField" EntitySet="SizeField" />
+            <End Role="DesignTypeSizeField" EntitySet="DesignTypeSizeField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PhoneNumbers_Customer" Association="Self.FK_PhoneNumbers_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="PhoneNumbers" EntitySet="PhoneNumbers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SizeFieldValue_Customer" Association="Self.FK_SizeFieldValue_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="SizeFieldValue" EntitySet="SizeFieldValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SizeFieldValue_SizeField" Association="Self.FK_SizeFieldValue_SizeField">
+            <End Role="SizeField" EntitySet="SizeField" />
+            <End Role="SizeFieldValue" EntitySet="SizeFieldValue" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TailorShopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TailorShopEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Customers" EntityType="TailorShopModel.Customer" />
+          <EntitySet Name="Designs" EntityType="TailorShopModel.Design" />
+          <EntitySet Name="DesignTypes" EntityType="TailorShopModel.DesignType" />
+          <EntitySet Name="PhoneNumbers" EntityType="TailorShopModel.PhoneNumber" />
+          <EntitySet Name="SizeFields" EntityType="TailorShopModel.SizeField" />
+          <EntitySet Name="SizeFieldValues" EntityType="TailorShopModel.SizeFieldValue" />
+          <AssociationSet Name="FK_PhoneNumbers_Customer" Association="TailorShopModel.FK_PhoneNumbers_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="PhoneNumber" EntitySet="PhoneNumbers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SizeFieldValue_Customer" Association="TailorShopModel.FK_SizeFieldValue_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="SizeFieldValue" EntitySet="SizeFieldValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Design_DesignType" Association="TailorShopModel.FK_Design_DesignType">
+            <End Role="DesignType" EntitySet="DesignTypes" />
+            <End Role="Design" EntitySet="Designs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SizeFieldValue_SizeField" Association="TailorShopModel.FK_SizeFieldValue_SizeField">
+            <End Role="SizeField" EntitySet="SizeFields" />
+            <End Role="SizeFieldValue" EntitySet="SizeFieldValues" />
+          </AssociationSet>
+          <AssociationSet Name="DesignSizeField" Association="TailorShopModel.DesignSizeField">
+            <End Role="Design" EntitySet="Designs" />
+            <End Role="SizeField" EntitySet="SizeFields" />
+          </AssociationSet>
+          <AssociationSet Name="DesignTypeSizeField" Association="TailorShopModel.DesignTypeSizeField">
+            <End Role="DesignType" EntitySet="DesignTypes" />
+            <End Role="SizeField" EntitySet="SizeFields" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="CustomerImage" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="CNIC" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="PhoneNumbers" Relationship="TailorShopModel.FK_PhoneNumbers_Customer" FromRole="Customer" ToRole="PhoneNumber" />
+          <NavigationProperty Name="SizeFieldValues" Relationship="TailorShopModel.FK_SizeFieldValue_Customer" FromRole="Customer" ToRole="SizeFieldValue" />
+        </EntityType>
+        <EntityType Name="Design">
+          <Key>
+            <PropertyRef Name="DesignID" />
+          </Key>
+          <Property Name="DesignID" Type="Int32" Nullable="false" />
+          <Property Name="DesignName" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="DesignTypeID" Type="Int32" Nullable="false" />
+          <Property Name="DesignImage" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="DesignType" Relationship="TailorShopModel.FK_Design_DesignType" FromRole="Design" ToRole="DesignType" />
+          <NavigationProperty Name="SizeFields" Relationship="TailorShopModel.DesignSizeField" FromRole="Design" ToRole="SizeField" />
+        </EntityType>
+        <EntityType Name="DesignType">
+          <Key>
+            <PropertyRef Name="DesignTypeID" />
+          </Key>
+          <Property Name="DesignTypeID" Type="Int32" Nullable="false" />
+          <Property Name="DesignTypeName" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Designs" Relationship="TailorShopModel.FK_Design_DesignType" FromRole="DesignType" ToRole="Design" />
+          <NavigationProperty Name="SizeFields" Relationship="TailorShopModel.DesignTypeSizeField" FromRole="DesignType" ToRole="SizeField" />
+        </EntityType>
+        <EntityType Name="PhoneNumber">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+            <PropertyRef Name="Number" />
+          </Key>
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="Number" Type="String" Nullable="false" MaxLength="15" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Customer" Relationship="TailorShopModel.FK_PhoneNumbers_Customer" FromRole="PhoneNumber" ToRole="Customer" />
+        </EntityType>
+        <EntityType Name="SizeField">
+          <Key>
+            <PropertyRef Name="SizeFieldID" />
+          </Key>
+          <Property Name="SizeFieldID" Type="Int32" Nullable="false" />
+          <Property Name="SizeFieldNameEnglish" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="SizeFieldNameUrdu" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="SizeFieldValues" Relationship="TailorShopModel.FK_SizeFieldValue_SizeField" FromRole="SizeField" ToRole="SizeFieldValue" />
+          <NavigationProperty Name="Designs" Relationship="TailorShopModel.DesignSizeField" FromRole="SizeField" ToRole="Design" />
+          <NavigationProperty Name="DesignTypes" Relationship="TailorShopModel.DesignTypeSizeField" FromRole="SizeField" ToRole="DesignType" />
+        </EntityType>
+        <EntityType Name="SizeFieldValue">
+          <Key>
+            <PropertyRef Name="SizeFieldID" />
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="SizeFieldID" Type="Int32" Nullable="false" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="Value" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="TailorShopModel.FK_SizeFieldValue_Customer" FromRole="SizeFieldValue" ToRole="Customer" />
+          <NavigationProperty Name="SizeField" Relationship="TailorShopModel.FK_SizeFieldValue_SizeField" FromRole="SizeFieldValue" ToRole="SizeField" />
+        </EntityType>
+        <Association Name="FK_PhoneNumbers_Customer">
+          <End Type="TailorShopModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="TailorShopModel.PhoneNumber" Role="PhoneNumber" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="PhoneNumber">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SizeFieldValue_Customer">
+          <End Type="TailorShopModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="TailorShopModel.SizeFieldValue" Role="SizeFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="SizeFieldValue">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Design_DesignType">
+          <End Type="TailorShopModel.DesignType" Role="DesignType" Multiplicity="1" />
+          <End Type="TailorShopModel.Design" Role="Design" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DesignType">
+              <PropertyRef Name="DesignTypeID" />
+            </Principal>
+            <Dependent Role="Design">
+              <PropertyRef Name="DesignTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SizeFieldValue_SizeField">
+          <End Type="TailorShopModel.SizeField" Role="SizeField" Multiplicity="1" />
+          <End Type="TailorShopModel.SizeFieldValue" Role="SizeFieldValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SizeField">
+              <PropertyRef Name="SizeFieldID" />
+            </Principal>
+            <Dependent Role="SizeFieldValue">
+              <PropertyRef Name="SizeFieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DesignSizeField">
+          <End Type="TailorShopModel.Design" Role="Design" Multiplicity="*" />
+          <End Type="TailorShopModel.SizeField" Role="SizeField" Multiplicity="*" />
+        </Association>
+        <Association Name="DesignTypeSizeField">
+          <End Type="TailorShopModel.DesignType" Role="DesignType" Multiplicity="*" />
+          <End Type="TailorShopModel.SizeField" Role="SizeField" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TailorShopModelStoreContainer" CdmEntityContainer="TailorShopEntities">
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="TailorShopModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CNIC" ColumnName="CNIC" />
+                <ScalarProperty Name="CustomerImage" ColumnName="CustomerImage" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Designs">
+            <EntityTypeMapping TypeName="TailorShopModel.Design">
+              <MappingFragment StoreEntitySet="Design">
+                <ScalarProperty Name="DesignImage" ColumnName="DesignImage" />
+                <ScalarProperty Name="DesignTypeID" ColumnName="DesignTypeID" />
+                <ScalarProperty Name="DesignName" ColumnName="DesignName" />
+                <ScalarProperty Name="DesignID" ColumnName="DesignID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DesignTypes">
+            <EntityTypeMapping TypeName="TailorShopModel.DesignType">
+              <MappingFragment StoreEntitySet="DesignType">
+                <ScalarProperty Name="DesignTypeName" ColumnName="DesignTypeName" />
+                <ScalarProperty Name="DesignTypeID" ColumnName="DesignTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PhoneNumbers">
+            <EntityTypeMapping TypeName="TailorShopModel.PhoneNumber">
+              <MappingFragment StoreEntitySet="PhoneNumbers">
+                <ScalarProperty Name="Number" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SizeFields">
+            <EntityTypeMapping TypeName="TailorShopModel.SizeField">
+              <MappingFragment StoreEntitySet="SizeField">
+                <ScalarProperty Name="SizeFieldNameUrdu" ColumnName="SizeFieldNameUrdu" />
+                <ScalarProperty Name="SizeFieldNameEnglish" ColumnName="SizeFieldNameEnglish" />
+                <ScalarProperty Name="SizeFieldID" ColumnName="SizeFieldID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SizeFieldValues">
+            <EntityTypeMapping TypeName="TailorShopModel.SizeFieldValue">
+              <MappingFragment StoreEntitySet="SizeFieldValue">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="SizeFieldID" ColumnName="SizeFieldID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="DesignSizeField" TypeName="TailorShopModel.DesignSizeField" StoreEntitySet="DesignSizeField">
+            <EndProperty Name="SizeField">
+              <ScalarProperty Name="SizeFieldID" ColumnName="SizeFieldID" />
+            </EndProperty>
+            <EndProperty Name="Design">
+              <ScalarProperty Name="DesignID" ColumnName="DesignID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="DesignTypeSizeField" TypeName="TailorShopModel.DesignTypeSizeField" StoreEntitySet="DesignTypeSizeField">
+            <EndProperty Name="SizeField">
+              <ScalarProperty Name="SizeFieldID" ColumnName="SizeFieldID" />
+            </EndProperty>
+            <EndProperty Name="DesignType">
+              <ScalarProperty Name="DesignTypeID" ColumnName="DesignTypeID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
