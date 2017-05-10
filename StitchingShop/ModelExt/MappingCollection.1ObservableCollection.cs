@@ -14,29 +14,10 @@ using System.Runtime.CompilerServices;
 #endif
 public partial class MappingCollection<T> : INotifyCollectionChanged, INotifyPropertyChanged
 {
-    //------------------------------------------------------
-    //
-    //  Constructors
-    //
-    //------------------------------------------------------
-
-    #region Constructors
-#if !FEATURE_CORECLR
-    [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-#endif
     public MappingCollection()
     {
         _items = _emptyArray;
     }
-
-    #endregion Constructors
-
-
-    //------------------------------------------------------
-    //
-    //  Public Methods
-    //
-    //------------------------------------------------------
 
     #region Public Methods
 
@@ -49,13 +30,6 @@ public partial class MappingCollection<T> : INotifyCollectionChanged, INotifyPro
     }
 
     #endregion Public Methods
-
-
-    //------------------------------------------------------
-    //
-    //  Public Events
-    //
-    //------------------------------------------------------
 
     #region Public Events
 
@@ -91,13 +65,6 @@ public partial class MappingCollection<T> : INotifyCollectionChanged, INotifyPro
     public virtual event NotifyCollectionChangedEventHandler CollectionChanged;
 
     #endregion Public Events
-
-
-    //------------------------------------------------------
-    //
-    //  Protected Methods
-    //
-    //------------------------------------------------------
 
     #region Protected Methods
 
@@ -300,13 +267,6 @@ public partial class MappingCollection<T> : INotifyCollectionChanged, INotifyPro
 
     #endregion Protected Methods
 
-
-    //------------------------------------------------------
-    //
-    //  Private Methods
-    //
-    //------------------------------------------------------
-
     #region Private Methods
     /// <summary>
     /// Helper to raise a PropertyChanged event  />).
@@ -349,12 +309,6 @@ public partial class MappingCollection<T> : INotifyCollectionChanged, INotifyPro
     }
     #endregion Private Methods
 
-    //------------------------------------------------------
-    //
-    //  Private Types
-    //
-    //------------------------------------------------------
-
     #region Private Types
 
     // this class helps prevent reentrant calls
@@ -380,12 +334,6 @@ public partial class MappingCollection<T> : INotifyCollectionChanged, INotifyPro
     }
 
     #endregion Private Types
-
-    //------------------------------------------------------
-    //
-    //  Private Fields
-    //
-    //------------------------------------------------------
 
     #region Private Fields
 
