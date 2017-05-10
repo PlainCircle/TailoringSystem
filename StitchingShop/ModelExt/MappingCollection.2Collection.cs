@@ -134,6 +134,7 @@ public partial class MappingCollection<T> : IList<T>, IList, IReadOnlyList<T>
         if (IsCompatibleObject(value))
             Insert(index, (T)value);
     }
+
     public MappingCollection(int capacity)
     {
         if (capacity < 0) ThrowHelper.ThrowArgumentOutOfRangeException(
